@@ -93,7 +93,7 @@ class OwnerController {
 		}
 
 		// find owners by last name
-		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, owner.getLastName());
+		Page<Owner> ownersResults = findPaginatedForOwnersName(page, owner.getLastName());
 		if (ownersResults.isEmpty()) {
 			// no owners found
 			result.rejectValue("lastName", "notFound", "not found");
@@ -120,6 +120,12 @@ class OwnerController {
 		return "owners/ownersList";
 	}
 
+	private Page<Owner> findPaginatedForOwnersName(int page, String name) {
+		int pageSize = 5;
+		Pageable pageable = PageRequest.of(page - 1, pageSize);
+		return owners.findByName(name, pageable);
+	}
+
 	private Page<Owner> findPaginatedForOwnersLastName(int page, String lastname) {
 		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -142,7 +148,7 @@ class OwnerController {
 
 		owner.setId(ownerId);
 		this.owners.save(owner);
-		return "redirect:/owners/{ownerId}";
+		return "redirect:owners/{ownerId}";
 	}
 
 	/**
